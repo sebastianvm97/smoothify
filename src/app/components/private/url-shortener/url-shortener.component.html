@@ -1,1 +1,55 @@
-<p>url-shortener works!</p>
+<section>
+    <h1>URL SHORTENER</h1>
+    
+    <form
+        [formGroup]="URLForm"
+        (submit)="onURLFormSubmit()"
+    >
+        <label
+            for="url"
+        >
+            URL:
+        </label>
+
+        <input
+            id="url"
+            type="text"
+            formControlName="urlControl"
+        >
+
+        <label
+            for="auth"
+        >
+            Does need Capcha check?
+        </label>
+
+        <input
+            type="checkbox"
+            id="auth"
+            formControlName="needsAuthControl"
+        />
+
+        <button
+            type="submit"
+            [disabled]="!URLForm.valid"
+        >
+            Smoothify URL
+        </button>
+    </form>
+
+    @if (generatedURL !== '') {
+        <div>
+            <h2>Generated URL</h2>
+
+            <p>
+                {{ generatedURL }}
+            </p>
+        </div>
+    }
+
+    <button
+        (click)="onAdd()"
+    >
+        add
+    </button>
+</section>
