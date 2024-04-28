@@ -5,37 +5,36 @@ import { User, UserCredential, createUserWithEmailAndPassword, getAuth, onAuthSt
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-    private app = initializeApp(firebaseConfig);
-    private auth = getAuth(this.app);
-    private user: User | undefined;
+  private app = initializeApp(firebaseConfig);
+  private auth = getAuth(this.app);
+  private user: User | undefined;
 
-    constructor() {
-        onAuthStateChanged(this.auth, (user) => {
-            if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/auth.user
-                this.user = user
-                console.log('USER IS SIGNED IN');
-                console.log("🚀 ~ AuthService ~ onAuthStateChanged ~ this.user:", this.user)
-              // ...
-            } else {
-              // User is signed out
-              // ...
-                console.log('USER IS SIGNED OUT');
-            }
-        });
-    }
+  constructor() {}
 
-    // To create a new user in the DB
-    // public async signUpUser(email: string, password: string) {
-    //     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
-    // }
+  public isUserAuth(): Promise<boolean> {
+    return new Promise(resolve => {
+      onAuthStateChanged(this.auth, (user) => {
+        if (user) {
+            this.user = user;
+            
+            resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  }
 
-    public async signInUser(email: string, password: string) {
-        const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-    }
+  // To create a new user in the DB
+  // public async signUpUser(email: string, password: string) {
+  //     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+  // }
 
-    public async signUserOut() {
-      await signOut(this.auth);
-    }
+  public async signInUser(email: string, password: string) {
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  public async signUserOut() {
+    await signOut(this.auth);
+  }
 }
