@@ -19,6 +19,7 @@ export class UrlShortenerComponent {
 
   URLForm = new FormGroup({
     urlControl: new FormControl('', Validators.required),
+    isQRControl: new FormControl(false, Validators.required),
     needsAuthControl: new FormControl(false, Validators.required)
   });
   generatedURL: string = '';
