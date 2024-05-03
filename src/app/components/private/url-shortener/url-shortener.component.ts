@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { PrivateDataService } from '../services/privateData.service';
+import { LinkCreationPayload } from '../interfaces';
+import _moment from 'moment';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-url-shortener',
@@ -25,24 +28,34 @@ export class UrlShortenerComponent {
   generatedURL: string = '';
 
   constructor(
-    private privateDataService: PrivateDataService
+    private privateDataService: PrivateDataService,
+    private authService: AuthService
   ) {}
 
   public async onURLFormSubmit() {
-    const URL = this.URLForm.controls.urlControl.value;
-
-    const hash = Math.random().toString(36).substring(2, 15);
-
-    this.generatedURL = btoa(hash);
-    console.log(atob(this.generatedURL));
-  }
-
-  public onAdd() {
     try {
-      this.privateDataService.addDoc();
+      const payload = this.buildLinkCreationPayload();
+
+      const userID = await this.authService.getUserID();
+
+      if (userID) {
+        const URLID = await this.privateDataService.createURLDocument(payload, userID);
+        this.generatedURL = `https://smoothify.co/${URLID}`;
+      }
     } catch (error) {
       console.error(error);
     }
+  }
+
+  private buildLinkCreationPayload(): LinkCreationPayload {
+    const payload: LinkCreationPayload = {
+      url: this.URLForm.controls.urlControl.value ?? '',
+      expiresIn: _moment().add(7, 'days').format('MM-DD-YYYY'),
+      isQR: this.URLForm.controls.isQRControl.value ?? false,
+      needsAuth: this.URLForm.controls.needsAuthControl.value ?? false
+    };
+
+    return payload;
   }
 
 }
