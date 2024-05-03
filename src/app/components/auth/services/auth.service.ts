@@ -37,4 +37,10 @@ export class AuthService {
   public async signUserOut() {
     await signOut(this.auth);
   }
+
+  public async getUserID() {
+    const userData = this.auth.currentUser;
+
+    return userData?.uid;
+  }
 }
