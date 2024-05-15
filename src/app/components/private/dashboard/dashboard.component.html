@@ -3,5 +3,16 @@
         Dashboard
     </h1>
 
-    <app-url-shortener></app-url-shortener>
+    <app-url-shortener
+        [userData]="userData"
+        (URLGenerated)="onURLGenerated($event)"
+    ></app-url-shortener>
+
+    <hr>
+
+    @for (url of userURLs; track $index) {
+        <app-url-metadata
+            [url]="url"
+        ></app-url-metadata>
+    }
 </section>

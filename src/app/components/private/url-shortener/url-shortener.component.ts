@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { PrivateDataService } from '../services/privateData.service';
-import { LinkCreationPayload } from '../interfaces';
+import { LinkCreationPayload, URL, UserData } from '../interfaces';
 import _moment from 'moment';
 import { AuthService } from '../../auth/services/auth.service';
 
@@ -20,6 +20,18 @@ import { AuthService } from '../../auth/services/auth.service';
 })
 export class UrlShortenerComponent {
 
+  private _userData: UserData;
+
+  @Input()
+  set userData(userData: UserData) {
+    this._userData = userData;
+  }
+  get userData() {
+    return this._userData;
+  }
+
+  @Output() URLGenerated: EventEmitter<URL> = new EventEmitter<URL>();
+
   URLForm = new FormGroup({
     urlControl: new FormControl('', Validators.required),
     isQRControl: new FormControl(false, Validators.required),
@@ -30,18 +42,32 @@ export class UrlShortenerComponent {
   constructor(
     private privateDataService: PrivateDataService,
     private authService: AuthService
-  ) {}
+  ) {
+    this._userData = {
+      id: '',
+      name: '',
+      email: '',
+      urls: []
+    };
+  }
 
   public async onURLFormSubmit() {
     try {
       const payload = this.buildLinkCreationPayload();
 
-      const userID = await this.authService.getUserID();
+      const URLId = await this.privateDataService.createURLDocument(payload);
 
-      if (userID) {
-        const URLID = await this.privateDataService.createURLDocument(payload, userID);
-        this.generatedURL = `https://smoothify.co/${URLID}`;
-      }
+      this.userData.urls.push(URLId);
+
+      await this.privateDataService.updateUserURLs(this.userData.urls, this.userData.id);
+
+      this.generatedURL = `https://smoothify.co/${URLId}`;
+      this.URLGenerated.next(
+        {
+          id: URLId,
+          ...payload
+        }
+      );
     } catch (error) {
       console.error(error);
     }

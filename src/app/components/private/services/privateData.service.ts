@@ -1,19 +1,39 @@
 import { initializeApp } from "firebase/app";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { DocumentData, FieldPath, doc, getDoc, getDocs, getFirestore, limit, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
 import { firebaseConfig } from "../../../environments/environments";
 import { Injectable } from "@angular/core";
-import { LinkCreationPayload } from "../interfaces";
+import { LinkCreationPayload, URL, UserData } from "../interfaces";
 
 @Injectable({providedIn: 'root'})
 export class PrivateDataService {
     private app = initializeApp(firebaseConfig);
     private db = getFirestore(this.app);
 
-    public async createURLDocument(payload: LinkCreationPayload, userID: string): Promise<string> {
-        const docRef = await addDoc(collection(this.db, `users/${userID}/urls`), payload);
+    public async createURLDocument(payload: LinkCreationPayload): Promise<string> {
+        const docRef = await addDoc(collection(this.db, `urls`), payload);
 
         return docRef.id;
+    }
+
+    public async updateUserURLs(userURLs: string[], userID: string): Promise<any> {
+        const response = await updateDoc(doc(this.db, 'users', userID), { urls: userURLs });
+
+        return response;
+    }
+
+    public async fetchUserURLs(urlIDs: string[]): Promise<DocumentData[]> {
+        const q = query(collection(this.db, 'urls'), where('__name__', 'in', urlIDs), limit(10));
+
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot as any;
+    }
+
+    public async fetchUserData(userID: string): Promise<UserData> {
+        const querySnapshot = await getDoc(doc(this.db, 'users', userID));
+
+        return querySnapshot.data() as any;
     }
     
     public async addDoc() {
