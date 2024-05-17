@@ -1,1 +1,19 @@
-<p>dashboard works!</p>
+<section>
+    <h1>
+        Dashboard
+    </h1>
+
+    <app-url-shortener
+        [userData]="userData"
+        (URLGenerated)="onURLGenerated($event)"
+    ></app-url-shortener>
+
+    <hr>
+
+    @for (url of userURLs; track $index) {
+        <app-url-metadata
+            [url]="url"
+            (URLDeleted)="onURLDeleted($event)"
+        ></app-url-metadata>
+    }
+</section>

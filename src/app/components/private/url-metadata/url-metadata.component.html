@@ -1,0 +1,128 @@
+<section>
+    @if (isEditing) {
+        <div>
+            <button
+                (click)="onSaveChanges()"
+                [disabled]="!urlControl.valid"
+            >
+                Save changes
+            </button>
+
+            <button
+                (click)="isEditing = false"
+            >
+                Cancel
+            </button>
+        </div>
+
+        <div>
+            <div>
+                <h4>
+                    URL:
+                </h4>
+
+                <mat-form-field>
+                    <mat-label>Input a URL to redirect to</mat-label>
+                    <input
+                        matInput
+                        [formControl]="urlControl"
+                    >
+                </mat-form-field>
+
+                <button
+                    (click)="urlControl.setValue(null)"
+                >
+                    clear
+                </button>
+            </div>
+
+            <div>
+                <h4>
+                    Expiration:
+                </h4>
+
+                <span>
+                    {{ expirationDateControl.value }}
+                </span>
+
+                <button
+                    (click)="onRefreshExpirationDate()"
+                >
+                    refresh
+                </button>
+            </div>
+
+            <div>
+                <h4>
+                    Needs authentication:
+                </h4>
+
+                <mat-slide-toggle
+                    [formControl]="authControl"
+                ></mat-slide-toggle>
+            </div>
+
+            <div>
+                <h4>
+                    Generate QR:
+                </h4>
+
+                <mat-slide-toggle
+                    [formControl]="QRControl"
+                ></mat-slide-toggle>
+            </div>
+        </div>
+    } @else {
+        <div>
+            <button
+                (click)="onEdit()"
+            >
+                edit
+            </button>
+    
+            <button
+                (click)="onDeleteURL()"
+            >
+                delete
+            </button>
+        </div>
+    
+        <div>
+            <div>
+                <h4>
+                    URL:
+                </h4>
+    
+                <span>
+                    http://smoothify.co/{{ url.id }}
+                </span>
+            </div>
+    
+            <div>
+                <h4>
+                    Expires in:
+                </h4>
+    
+                <span>
+                    {{ url.expiresIn }}
+                </span>
+            </div>
+    
+            <div>
+                <h4>
+                    Authentication:
+                </h4>
+    
+                <span>
+                    {{ url.needsAuth ? 'Enabled' : 'Disabled' }}
+                </span>
+            </div>
+        </div>
+    
+        <div>
+            <button>
+                Navigate
+            </button>
+        </div>
+    }
+</section>
