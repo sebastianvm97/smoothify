@@ -76,7 +76,7 @@ export class UrlShortenerComponent {
   private buildLinkCreationPayload(): LinkCreationPayload {
     const payload: LinkCreationPayload = {
       url: this.URLForm.controls.urlControl.value ?? '',
-      expiresIn: _moment().add(7, 'days').format('MM-DD-YYYY'),
+      expiresIn: _moment().add(7, 'days').format('YYYY-MM-DD'),
       isQR: this.URLForm.controls.isQRControl.value ?? false,
       needsAuth: this.URLForm.controls.needsAuthControl.value ?? false
     };
