@@ -2,7 +2,8 @@
     @if (isEditing) {
         <div>
             <button
-                (click)="isEditing = false"
+                (click)="onSaveChanges()"
+                [disabled]="!urlControl.valid"
             >
                 Save changes
             </button>
@@ -28,7 +29,9 @@
                     >
                 </mat-form-field>
 
-                <button>
+                <button
+                    (click)="urlControl.setValue(null)"
+                >
                     clear
                 </button>
             </div>
@@ -42,7 +45,9 @@
                     {{ expirationDateControl.value }}
                 </span>
 
-                <button>
+                <button
+                    (click)="onRefreshExpirationDate()"
+                >
                     refresh
                 </button>
             </div>
@@ -75,7 +80,9 @@
                 edit
             </button>
     
-            <button>
+            <button
+                (click)="onDeleteURL()"
+            >
                 delete
             </button>
         </div>

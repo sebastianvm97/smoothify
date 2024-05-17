@@ -100,4 +100,21 @@ export class DashboardComponent {
   public onURLGenerated(newURL: URL): void {
     this.userURLs.push(newURL);
   }
+
+  public async onURLDeleted(deletedURL: URL) {
+    try {
+      let urlIndex = this.userData.urls.findIndex(url => url === deletedURL.id);
+
+      if (urlIndex !== -1) {
+        this.userData.urls.splice(urlIndex, 1);
+
+        urlIndex = this.userURLs.findIndex(url => url.id === deletedURL.id);
+        this.userURLs.splice(urlIndex, 1);
+
+        await this.privateDataService.updateUserURLs(this.userData.urls, this.userData.id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }

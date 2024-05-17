@@ -1,9 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { DocumentData, FieldPath, doc, getDoc, getDocs, getFirestore, limit, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { DocumentData, FieldPath, deleteDoc, doc, getDoc, getDocs, getFirestore, limit, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
 import { firebaseConfig } from "../../../environments/environments";
 import { Injectable } from "@angular/core";
-import { LinkCreationPayload, URL, UserData } from "../interfaces";
+import { LinkCreationPayload, URL, URLUpdatePayload, UserData } from "../interfaces";
 
 @Injectable({providedIn: 'root'})
 export class PrivateDataService {
@@ -34,6 +34,18 @@ export class PrivateDataService {
         const querySnapshot = await getDoc(doc(this.db, 'users', userID));
 
         return querySnapshot.data() as any;
+    }
+
+    public async updateURL(payload: URLUpdatePayload, URLId: string): Promise<any> {
+        const response = await updateDoc(doc(this.db, 'urls', URLId), { ...payload });
+
+        return response;
+    }
+
+    public async deleteURL(URLId: string): Promise<any> {
+        const response = await deleteDoc(doc(this.db, 'urls', URLId));
+
+        return response;
     }
     
     public async addDoc() {

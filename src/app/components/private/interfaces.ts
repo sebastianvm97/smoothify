@@ -19,3 +19,10 @@ export interface URL {
     isQR: boolean;
     needsAuth: boolean;
 }
+
+export interface URLUpdatePayload {
+    url: string;
+    expiresIn: string;
+    isQR: boolean;
+    needsAuth: boolean;
+}

@@ -13,6 +13,7 @@
     @for (url of userURLs; track $index) {
         <app-url-metadata
             [url]="url"
+            (URLDeleted)="onURLDeleted($event)"
         ></app-url-metadata>
     }
 </section>
