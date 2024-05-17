@@ -68,7 +68,7 @@ export class UrlMetadataComponent {
 
     currentDate.add(7, 'days');
 
-    this.expirationDateControl.setValue(currentDate.format('MM-DD-YYYY'), { emitEvent: false });
+    this.expirationDateControl.setValue(currentDate.format('YYYY-MM-DD'), { emitEvent: false });
   }
 
   public async onSaveChanges() {
